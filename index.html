@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>爱心宠物医院 | Loving Pet Hospital</title>
+  <style>
+    /* ========== Reset & Base ========== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+        'Noto Sans SC', sans-serif;
+      color: #1f2937;
+      background: #fafcff;
+      line-height: 1.6;
+    }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    img { max-width: 100%; display: block; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    /* ========== Header ========== */
+    .header {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      z-index: 100;
+      transition: box-shadow 0.3s;
+    }
+    .header.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.06); }
+    .header .container {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 70px;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 22px; font-weight: 700;
+      color: #2563eb;
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 20px;
+    }
+    .nav { display: flex; align-items: center; gap: 32px; }
+    .nav a {
+      font-size: 15px; font-weight: 500; color: #4b5563;
+      transition: color 0.2s;
+      position: relative;
+    }
+    .nav a::after {
+      content: ''; position: absolute; left: 0; bottom: -4px;
+      width: 0; height: 2px; background: #2563eb;
+      transition: width 0.25s; border-radius: 2px;
+    }
+    .nav a:hover { color: #2563eb; }
+    .nav a:hover::after { width: 100%; }
+    .nav .btn-appointment {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff !important; padding: 10px 22px; border-radius: 8px;
+      font-weight: 600; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .nav .btn-appointment::after { display: none; }
+    .nav .btn-appointment:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(37,99,235,0.35);
+    }
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+    .menu-toggle span {
+      width: 26px; height: 2.5px; background: #1f2937;
+      border-radius: 4px; transition: 0.3s;
+    }
+
+    /* ========== Hero ========== */
+    .hero {
+      padding: 140px 0 80px;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #e0e7ff 100%);
+      overflow: hidden;
+    }
+    .hero .container {
+      display: flex; align-items: center; gap: 60px;
+    }
+    .hero-content { flex: 1; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(37,99,235,0.1); color: #2563eb;
+      padding: 6px 16px; border-radius: 50px;
+      font-size: 14px; font-weight: 600; margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: 48px; font-weight: 800; line-height: 1.15;
+      margin-bottom: 20px;
+    }
+    .hero h1 span { color: #2563eb; }
+    .hero p {
+      font-size: 18px; color: #4b5563; max-width: 500px;
+      margin-bottom: 32px; line-height: 1.7;
+    }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-block;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff; padding: 14px 32px; border-radius: 10px;
+      font-weight: 600; font-size: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,99,235,0.35); }
+    .btn-outline {
+      display: inline-block;
+      border: 2px solid #2563eb; color: #2563eb;
+      padding: 12px 30px; border-radius: 10px;
+      font-weight: 600; font-size: 16px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-outline:hover { background: #2563eb; color: #fff; }
+    .hero-image {
+      flex: 0 0 420px;
+      background: linear-gradient(135deg, #93c5fd, #a5b4fc);
+      border-radius: 24px;
+      padding: 30px;
+      position: relative;
+    }
+    .hero-image .pet-illustration {
+      width: 100%; border-radius: 16px;
+      display: block;
+    }
+    .hero-stats {
+      margin-top: 48px;
+      display: flex; gap: 48px;
+    }
+    .hero-stats .stat-item h3 {
+      font-size: 32px; font-weight: 800; color: #2563eb;
+    }
+    .hero-stats .stat-item p { font-size: 14px; color: #6b7280; margin: 0; }
+
+    /* ========== Section shared ========== */
+    section { padding: 80px 0; }
+    .section-header {
+      text-align: center; margin-bottom: 56px;
+    }
+    .section-header h2 {
+      font-size: 36px; font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .section-header p {
+      color: #6b7280; font-size: 17px; max-width: 560px;
+      margin: 0 auto;
+    }
+    .section-tag {
+      display: inline-block;
+      background: rgba(37,99,235,0.08); color: #2563eb;
+      padding: 4px 14px; border-radius: 50px;
+      font-size: 13px; font-weight: 600; margin-bottom: 12px;
+    }
+
+    /* ========== Services ========== */
+    .services { background: #fff; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 28px;
+    }
+    .service-card {
+      background: #f9fbff;
+      border: 1px solid #eef2f8;
+      border-radius: 16px;
+      padding: 32px 28px;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .service-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+    }
+    .service-icon {
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; margin-bottom: 20px;
+    }
+    .service-card h3 { font-size: 20px; margin-bottom: 10px; }
+    .service-card p { color: #6b7280; font-size: 15px; line-height: 1.7; }
+
+    /* ========== About ========== */
+    .about .container {
+      display: flex; align-items: center; gap: 80px;
+    }
+    .about-image {
+      flex: 0 0 440px;
+      background: linear-gradient(135deg, #fde68a, #fbbf24);
+      border-radius: 24px; padding: 20px; aspect-ratio: 4/3;
+      display: flex; align-items: center; justify-content: center;
+      color: #92400e; font-size: 80px;
+    }
+    .about-text h2 { font-size: 36px; font-weight: 800; margin-bottom: 16px; }
+    .about-text p { color: #6b7280; font-size: 16px; line-height: 1.8; margin-bottom: 16px; }
+    .about-features { margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .about-features li {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 15px; color: #374151;
+    }
+    .about-features li::before { content: '✓'; color: #2563eb; font-weight: 700; }
+
+    /* ========== Team ========== */
+    .team { background: #fff; }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 32px;
+    }
+    .team-card {
+      text-align: center; padding: 32px 20px 24px;
+      border-radius: 16px;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .team-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.06);
+    }
+    .team-avatar {
+      width: 96px; height: 96px; border-radius: 50%;
+      margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 44px; color: #fff;
+    }
+    .team-card h4 { font-size: 18px; font-weight: 700; }
+    .team-card .role { color: #2563eb; font-size: 14px; font-weight: 600; margin: 4px 0 8px; }
+    .team-card p { color: #6b7280; font-size: 14px; }
+
+    /* ========== Testimonials ========== */
+    .testimonials {
+      background: linear-gradient(135deg, #f0f4ff, #e8f0fe);
+    }
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 28px;
+    }
+    .testimonial-card {
+      background: #fff; border-radius: 16px; padding: 32px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .testimonial-card .stars { color: #f59e0b; font-size: 18px; margin-bottom: 12px; }
+    .testimonial-card blockquote {
+      color: #4b5563; font-size: 15px; line-height: 1.7;
+      font-style: italic; margin-bottom: 16px;
+    }
+    .testimonial-author {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .testimonial-author .avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      font-size: 20px; display: flex; align-items: center; justify-content: center;
+    }
+    .testimonial-author strong { font-size: 14px; display: block; }
+    .testimonial-author span { font-size: 12px; color: #9ca3af; }
+
+    /* ========== Contact ========== */
+    .contact .container {
+      display: flex; gap: 60px;
+    }
+    .contact-info { flex: 1; }
+    .contact-info h2 { font-size: 32px; font-weight: 800; margin-bottom: 12px; }
+    .contact-info > p { color: #6b7280; margin-bottom: 32px; }
+    .contact-item {
+      display: flex; gap: 16px; margin-bottom: 24px;
+    }
+    .contact-item .icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: rgba(37,99,235,0.08); color: #2563eb;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .contact-item h4 { font-size: 16px; }
+    .contact-item p { color: #6b7280; font-size: 14px; }
+    .contact-form {
+      flex: 1; background: #fff; padding: 36px;
+      border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+      border: 1px solid #eef2f8;
+    }
+    .contact-form h3 { font-size: 20px; margin-bottom: 20px; }
+    .form-row { display: flex; gap: 12px; margin-bottom: 16px; }
+    .form-group { flex: 1; }
+    .form-group label {
+      display: block; font-size: 14px; font-weight: 600;
+      margin-bottom: 4px; color: #374151;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 12px 14px; border: 1.5px solid #e2e8f0;
+      border-radius: 8px; font-size: 15px; font-family: inherit;
+      transition: border-color 0.2s; background: #fafcff;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .contact-form .btn-primary { width: 100%; text-align: center; border: none; cursor: pointer; margin-top: 8px; }
+
+    /* ========== Footer ========== */
+    .footer {
+      background: #0f172a; color: #e2e8f0; padding: 48px 0 24px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px; margin-bottom: 40px;
+    }
+    .footer-brand .logo { color: #fff; margin-bottom: 12px; }
+    .footer-brand p { color: #94a3b8; font-size: 14px; line-height: 1.7; }
+    .footer h4 { color: #fff; font-size: 16px; margin-bottom: 16px; }
+    .footer ul li { margin-bottom: 10px; }
+    .footer ul a { color: #94a3b8; font-size: 14px; transition: color 0.2s; }
+    .footer ul a:hover { color: #60a5fa; }
+    .footer-bottom {
+      border-top: 1px solid #1e293b; padding-top: 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 14px; color: #64748b;
+    }
+
+    /* ========== Responsive ========== */
+    @media (max-width: 960px) {
+      .hero .container { flex-direction: column; text-align: center; }
+      .hero h1 { font-size: 36px; }
+      .hero p { max-width: 100%; }
+      .hero-btns { justify-content: center; }
+      .hero-stats { justify-content: center; }
+      .hero-image { flex: unset; width: 100%; max-width: 400px; }
+      .about .container { flex-direction: column; gap: 40px; }
+      .about-image { flex: unset; width: 100%; max-width: 480px; }
+      .about-features { grid-template-columns: 1fr; }
+      .contact .container { flex-direction: column; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    }
+    @media (max-width: 680px) {
+      .nav { display: none; }
+      .menu-toggle { display: flex; }
+      .nav.open { display: flex; flex-direction: column; position: absolute; top: 70px; left: 0; right: 0;
+        background: #fff; padding: 20px 24px; border-bottom: 1px solid #eef2f8; gap: 18px;
+        align-items: flex-start;
+      }
+      .hero h1 { font-size: 28px; }
+      .section-header h2 { font-size: 28px; }
+      .service-card { padding: 24px; }
+      .contact-form { padding: 24px; }
+      .form-row { flex-direction: column; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; gap: 8px; }
+    }
+    @media (max-width: 400px) {
+      .hero-stats { flex-direction: column; align-items: center; gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== Header ========== -->
+  <header class="header" id="header">
+    <div class="container">
+      <div class="logo">
+        <div class="logo-icon">🐾</div>
+        <span>爱心宠物医院</span>
+      </div>
+      <nav class="nav" id="nav">
+        <a href="#hero">首页</a>
+        <a href="#services">服务</a>
+        <a href="#about">关于</a>
+        <a href="#team">团队</a>
+        <a href="#testimonials">评价</a>
+        <a href="#contact" class="btn-appointment">预约就诊</a>
+      </nav>
+      <div class="menu-toggle" id="menuToggle" aria-label="菜单">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== Hero ========== -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">🏥 专业 · 关爱 · 值得信赖</div>
+        <h1>用心守护<br>每一份<span>毛茸茸</span>的信任</h1>
+        <p>自 2015 年成立以来，我们已为超过 20,000 只宠物提供专业、温暖、全面的医疗服务。我们用爱心与技术，陪伴每一个小生命的健康成长。</p>
+        <div class="hero-btns">
+          <a href="#contact" class="btn-primary">立即预约</a>
+          <a href="#services" class="btn-outline">了解服务</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item"><h3>20,000+</h3><p>服务宠物</p></div>
+          <div class="stat-item"><h3>98%</h3><p>客户满意度</p></div>
+          <div class="stat-item"><h3>15+</h3><p>资深医师</p></div>
+        </div>
+      </div>
+      <div class="hero-image">
+        <div class="pet-illustration" style="background:#e6f0ff;border-radius:16px;padding:40px 20px;text-align:center;font-size:120px;line-height:1;">
+          🐱 🐶
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Services ========== -->
+  <section class="services" id="services">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">我们的服务</span>
+        <h2>全方位宠物医疗护理</h2>
+        <p>从预防保健到高端手术，为您的爱宠提供一站式医疗关怀</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon" style="background:#dbeafe;">🩺</div>
+          <h3>综合体检</h3>
+          <p>全面的身体健康检查，涵盖心肺功能、血液检测、影像学检查等，及早发现潜在健康问题。</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon" style="background:#fce4ec;">💉</div>
+          <h3>疫苗接种</h3>
+          <p>提供犬猫各类疫苗接种服务，制定科学的免疫计划，有效预防常见传染病的发生。</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon" style="background:#fef3c7;">🦷</div>
+          <h3>口腔护理</h3>
+          <p>专业牙齿清洁、口腔检查、拔牙等牙科服务，预防牙周病，守护宠物口腔健康。</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon" style="background:#ede7f6;">🔬</div>
+          <h3>实验室检测</h3>
+          <p>配备先进的血液分析仪、生化仪等检测设备，快速准确诊断各类疾病，为治疗提供科学依据。</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon" style="background:#e0f2f1;">🏥</div>
+          <h3>外科手术</h3>
+          <p>现代化无菌手术室，经验丰富的外科团队，开展绝育、软组织手术、骨科手术等各类手术。</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon" style="background:#fbe9e7;">🐱</div>
+          <h3>中医理疗</h3>
+          <p>特色宠物中医服务，包括针灸、推拿按摩、中药调理等，尤其适合慢性病和老年宠物。</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon" style="background:#e8f5e9;">📋</div>
+          <h3>健康管理</h3>
+          <p>为每只宠物建立专属健康档案，提供饮食营养指导、体重管理和慢性病长期跟踪服务。</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon" style="background:#fff3e0;">🚑</div>
+          <h3>急诊救治</h3>
+          <p>24 小时急诊热线，配备专业急救设备和药品，第一时间为危急病例提供生命支持。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== About ========== -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-image">
+        🐕
+      </div>
+      <div class="about-text">
+        <span class="section-tag">关于我们</span>
+        <h2>十年用心，<br>只为毛孩子的健康笑容</h2>
+        <p>
+          爱心宠物医院成立于 2015 年，是本市首批获得动物诊疗许可证的现代化宠物医疗机构之一。
+          我们拥有 2000 平方米的诊疗空间，设有内科、外科、眼科、牙科、中医理疗等专业科室。
+        </p>
+        <p>
+          我们深信——每一只宠物都是家庭的一员。我们不仅治疗疾病，更希望用温暖和专业，
+          让每一次就诊都成为宠物和主人安心的体验。
+        </p>
+        <ul class="about-features">
+          <li>15+ 年经验资深兽医团队</li>
+          <li>先进进口医疗设备</li>
+          <li>无菌层流手术室</li>
+          <li>24h 急诊看护</li>
+          <li>独立住院观察区</li>
+          <li>舒适温馨的就诊环境</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Team ========== -->
+  <section class="team" id="team">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">专家团队</span>
+        <h2>遇见我们的兽医专家</h2>
+        <p>经验丰富的医疗团队，用专业技术守护每个小生命</p>
+      </div>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-avatar" style="background:linear-gradient(135deg,#60a5fa,#2563eb);">👨‍⚕️</div>
+          <h4>张明远 医师</h4>
+          <div class="role">院长 · 首席兽医</div>
+          <p>20 年临床经验，专攻小动物内科及复杂外科手术。美国兽医协会会员。</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar" style="background:linear-gradient(135deg,#f472b6,#e11d48);">👩‍⚕️</div>
+          <h4>李思雨 医师</h4>
+          <div class="role">副院长 · 外科主任</div>
+          <p>擅长骨科手术、软组织手术及急诊创伤处理。推崇微创手术理念。</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar" style="background:linear-gradient(135deg,#34d399,#059669);">👩‍⚕️</div>
+          <h4>王欣然 医师</h4>
+          <div class="role">中医理疗科主任</div>
+          <p>国内首批宠物针灸师，专注中西医结合治疗慢性病与神经系统疾病。</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar" style="background:linear-gradient(135deg,#fbbf24,#d97706);">👨‍⚕️</div>
+          <h4>陈浩宇 医师</h4>
+          <div class="role">预防医学主任</div>
+          <p>专注于宠物疫苗免疫方案设计与流行病学防控，守护社区宠物健康。</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);">👩‍⚕️</div>
+          <h4>林小暖 医师</h4>
+          <div class="role">猫科专科医师</div>
+          <p>认证猫科医学专家（AFMP），尤其擅长猫友好型诊疗技术。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Testimonials ========== -->
+  <section class="testimonials" id="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">客户心声</span>
+        <h2>毛孩子们的真实故事</h2>
+        <p>来自每一位宠物家长的真诚反馈，是我们不断进步的动力</p>
+      </div>
+      <div class="testimonial-grid">
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <blockquote>"我家猫咪尿闭反复发作，跑了三家医院都没治好。张院长耐心诊断后发现是罕见结石，手术后恢复得很好。真心感谢整个医护团队！"</blockquote>
+          <div class="testimonial-author">
+            <div class="avatar">😺</div>
+            <div><strong>赵女士</strong><span>猫咪 · 布丁</span></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <blockquote>"从第一次接种疫苗到每年体检，我们一直选择爱心。医生们对狗狗超级温柔，每次去狗狗都摇着尾巴进门！强烈推荐给所有宠物家长。"</blockquote>
+          <div class="testimonial-author">
+            <div class="avatar">🐶</div>
+            <div><strong>刘先生</strong><span>狗狗 · 旺财</span></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <blockquote>"我家 14 岁的老狗患有严重关节炎，王医生的针灸和理疗方案让它的生活质量大大提高，现在又能慢慢走路了。这种人文关怀真的很难得。"</blockquote>
+          <div class="testimonial-author">
+            <div class="avatar">🐕</div>
+            <div><strong>陈阿姨</strong><span>狗狗 · 阿福</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Contact ========== -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="contact-info">
+        <span class="section-tag">联系我们</span>
+        <h2>预约就诊<br>或咨询详情</h2>
+        <p>无论您是首次就诊还是定期复查，我们都竭诚为您服务</p>
+        <div class="contact-item">
+          <div class="icon">📍</div>
+          <div>
+            <h4>医院地址</h4>
+            <p>上海市浦东新区世纪大道 1200 号<br>爱心宠物医疗中心</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="icon">📞</div>
+          <div>
+            <h4>服务热线</h4>
+            <p>021-6888-8888<br>紧急热线：139-8888-8888（24h）</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="icon">🕐</div>
+          <div>
+            <h4>营业时间</h4>
+            <p>周一至周五：08:30 – 20:00<br>周六日及节假日：09:00 – 18:00</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="icon">✉️</div>
+          <div>
+            <h4>电子邮箱</h4>
+            <p>hello@lovepet.com</p>
+          </div>
+        </div>
+      </div>
+      <form class="contact-form" onsubmit="event.preventDefault();alert('预约提交成功！我们会尽快与您联系 🐾');">
+        <h3>📝 预约挂号</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>您的姓名</label>
+            <input type="text" placeholder="请输入姓名" required />
+          </div>
+          <div class="form-group">
+            <label>联系电话</label>
+            <input type="tel" placeholder="请输入手机号" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>宠物类型</label>
+            <select>
+              <option>请选择</option>
+              <option>🐱 猫咪</option>
+              <option>🐶 狗狗</option>
+              <option>🐰 兔兔</option>
+              <option>🐹 仓鼠</option>
+              <option>其他</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>预约日期</label>
+            <input type="date" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>就诊需求</label>
+          <textarea placeholder="请简要描述您的需求，如：疫苗接种、体检、就诊咨询等"></textarea>
+        </div>
+        <button type="submit" class="btn-primary">提交预约</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ========== Footer ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo">
+            <div class="logo-icon">🐾</div>
+            <span>爱心宠物医院</span>
+          </div>
+          <p>用心守护每一份毛茸茸的信任。<br>自 2015 年起，致力于为您的爱宠提供最优质的医疗服务。</p>
+        </div>
+        <div>
+          <h4>快速链接</h4>
+          <ul>
+            <li><a href="#services">医疗服务</a></li>
+            <li><a href="#team">专家团队</a></li>
+            <li><a href="#testimonials">客户评价</a></li>
+            <li><a href="#contact">联系我们</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>服务项目</h4>
+          <ul>
+            <li><a href="#services">综合体检</a></li>
+            <li><a href="#services">疫苗接种</a></li>
+            <li><a href="#services">外科手术</a></li>
+            <li><a href="#services">中医理疗</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>关注我们</h4>
+          <ul>
+            <li><a href="#">微信公众号</a></li>
+            <li><a href="#">小红书</a></li>
+            <li><a href="#">抖音</a></li>
+            <li><a href="#">微博</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2015-2026 爱心宠物医院 · 沪ICP备 2024XXXXXX 号</span>
+        <span>用心守护，用爱治愈 ❤️</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========== JS ========== -->
+  <script>
+    // 菜单切换
+    const toggle = document.getElementById('menuToggle');
+    const nav = document.getElementById('nav');
+    toggle.addEventListener('click', () => nav.classList.toggle('open'));
+
+    // 点击导航链接关闭菜单
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+
+    // 滚动时给 header 添加阴影
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
+
+</body>
+</html>
